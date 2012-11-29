@@ -14,4 +14,8 @@ urlpatterns = patterns('',
 
     # Uncomment the next line to enable the admin:
     #url(r'^admin/', include(admin.site.urls)),
+
+    url(r'^report/', 'openshift.views.report', name='report'),
+    url(r'^rhui_xmlrpc_server/', 'openshift.views.rhui_xmlrpc_handler', name='rhui_xmlrpc_handler'),
+
 )
