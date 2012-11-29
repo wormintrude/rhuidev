@@ -15,5 +15,14 @@ def rhui_xmlrpc_handler(request):
     return HttpResponse(html_response)
 
 def rhui_db_test(request):
-    return HttpResponse(db_test())
+    test = db_test()
+    return HttpResponse(test.db_connection_test())
+
+def rhui_db_read_test(request):
+    test = db_test()
+    return HttpResponse(test.db_read_test())
+
+def rhui_db_write_test(request):
+    test = db_test()
+    return HttpResponse(test.db_write_test())
 

@@ -18,5 +18,7 @@ urlpatterns = patterns('',
     url(r'^report/', 'openshift.views.report', name='report'),
     url(r'^rhui_xmlrpc_server/', 'openshift.views.rhui_xmlrpc_handler', name='rhui_xmlrpc_handler'),
     url(r'^db_test/', 'openshift.views.rhui_db_test', name='rhui_db_test'),
+    url(r'^db_write/', 'openshift.views.rhui_db_write_test', name='rhui_db_write_test'),
+    url(r'^db_read/', 'openshift.views.rhui_db_read_test', name='rhui_db_read_test'),
 
 )
