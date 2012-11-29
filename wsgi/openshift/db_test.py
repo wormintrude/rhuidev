@@ -32,7 +32,8 @@ class db_test(object):
 
   def db_write_test(self):
     try:
-      database = mysqldb.connect(host='localhost', user='admin', passwd='iJlhrsX4pAYp', db='rhuidev')
+      database = mysqldb.connect(host=os.environ['OPENSHIFT_MYSQL_DB_HOST'], user=os.environ['OPENSHIFT_MYSQL_DB_USERNAME'], passwd=os.environ['OPENSHIFT_MYSQL_DB_PASSWORD'], db=os.environ['OPENSHIFT_APP_NAME'])
+      # database = mysqldb.connect(host='localhost', user='admin', passwd='iJlhrsX4pAYp', db='rhuidev')
       sql = 'CREATE TABLE db_write_test (some_field VARCHAR(4));'
       result = database.query(sql)
     except:
