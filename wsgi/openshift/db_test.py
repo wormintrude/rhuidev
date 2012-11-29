@@ -3,7 +3,7 @@
 def db_test():
   try:
     import MySQLdb
-    result = "MySQLdb imported"
+    result = "MySQLdb imported succesfully"
   except:
     result = "MySQLdb NOT imported"
 
