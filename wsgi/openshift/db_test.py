@@ -1,6 +1,7 @@
 # Testing whether the DB connection works. Kind of.
 
 import MySQLdb as mysqldb
+from django.db import connection
 import os
 
 class db_test(object):
@@ -15,9 +16,10 @@ class db_test(object):
 
   def db_read_test(self):
     try:
-      database = mysqldb.connect(host=os.environ['OPENSHIFT_MYSQL_DB_HOST'], user=os.environ['OPENSHIFT_MYSQL_DB_USERNAME'], passwd=os.environ['OPENSHIFT_MYSQL_DB_PASSWORD'], db=os.environ['OPENSHIFT_APP_NAME'])
+      # database = mysqldb.connect(host=os.environ['OPENSHIFT_MYSQL_DB_HOST'], user=os.environ['OPENSHIFT_MYSQL_DB_USERNAME'], passwd=os.environ['OPENSHIFT_MYSQL_DB_PASSWORD'], db=os.environ['OPENSHIFT_APP_NAME'])
       # database = mysqldb.connect(host='localhost', user='admin', passwd='iJlhrsX4pAYp', db='rhuidev')
-      cursor = database.cursor()
+      # cursor = database.cursor()
+      cursor = connection.cursor()
       sql = 'SELECT * FROM rhuidev.usage_data;'
       cursor.execute(sql)
       result = cursor.fetchall()
@@ -32,10 +34,11 @@ class db_test(object):
 
   def db_write_test(self):
     try:
-      database = mysqldb.connect(host=os.environ['OPENSHIFT_MYSQL_DB_HOST'], user=os.environ['OPENSHIFT_MYSQL_DB_USERNAME'], passwd=os.environ['OPENSHIFT_MYSQL_DB_PASSWORD'], db=os.environ['OPENSHIFT_APP_NAME'])
+      # database = mysqldb.connect(host=os.environ['OPENSHIFT_MYSQL_DB_HOST'], user=os.environ['OPENSHIFT_MYSQL_DB_USERNAME'], passwd=os.environ['OPENSHIFT_MYSQL_DB_PASSWORD'], db=os.environ['OPENSHIFT_APP_NAME'])
       # database = mysqldb.connect(host='localhost', user='admin', passwd='iJlhrsX4pAYp', db='rhuidev')
+      cursor = connection.cursor()
       sql = 'CREATE TABLE db_write_test (some_field VARCHAR(4));'
-      result = database.query(sql)
+      result = cursor.execute(sql)
     except:
       result = "Error writing to database"
    
