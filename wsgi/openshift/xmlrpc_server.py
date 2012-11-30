@@ -1,5 +1,6 @@
 from SimpleXMLRPCServer import SimpleXMLRPCDispatcher
 from django.http import HttpResponse
+from django.db import connection
 
 class rpc_server(object):
 	"""
@@ -13,6 +14,9 @@ class rpc_server(object):
 		if len(request.POST):
 			response = HttpResponse(mimetype="application/xml")
 			response.write(rpc_server.dispatcher._marshaled_dispatch(request.raw_post_data))
+			# DEBUG
+			methods = rpc_server.dispatcher.system_listMethods()
+			print str(methods)
 		else:
 			response = HttpResponse()
 			response.write("<b>This is an XMLRPC Service to Cockfosters.</b><br>")
@@ -30,19 +34,31 @@ class rpc_server(object):
 		response['Content-length'] = str(len(response.content))
 		return response
 
-	def commit_data(self, data):
+	def commit_data(data):
 		"""
 		Commits data from the client into the RHUI usage database
 		"""
-		print data
-		return 0
+		return data
 
-	def print_this(self, data):
+	def print_this():
 		"""
 		Some other function
 		"""
-		print data
+		this = "Printing THIS"
+		print this
+		return this
+
+	def db_read():
+		"""
+		Retrieves usage statistics from the usage_data table
+		"""
+		cursor = connection.cursor()
+		sql = 'SELECT * FROM rhuidev.usage_data;'
+		cursor.execute(sql)
+		result = cursor.fetchall()
+		return result
 
 	dispatcher.register_function(commit_data, 'commit_data')
 	dispatcher.register_function(print_this, 'print_this')
+	dispatcher.register_function(db_read, 'db_read')
 

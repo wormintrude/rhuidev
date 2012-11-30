@@ -1,4 +1,3 @@
-import sys
 import xmlrpclib
 
 try:
@@ -7,8 +6,9 @@ except:
 	print "Could not contact the XMLRPC Server"
 
 try:
-	data = str("some_data")
-	rpc_server.print_this(data)
+	rpc_server.print_this()
+	db_out = rpc_server.db_read()
+	print str(db_out)
 except:
 	print "Some kind of error"
 
