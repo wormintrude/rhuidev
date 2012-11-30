@@ -16,7 +16,8 @@ class rpc_server(object):
 			response.write(rpc_server.dispatcher._marshaled_dispatch(request.raw_post_data))
 			# DEBUG
 			methods = rpc_server.dispatcher.system_listMethods()
-			print str(methods)
+			print "Incoming XMLRPC connection."
+			print "Available methods: " + str(methods)
 		else:
 			response = HttpResponse()
 			response.write("<b>This is an XMLRPC Service to Cockfosters.</b><br>")
@@ -34,11 +35,28 @@ class rpc_server(object):
 		response['Content-length'] = str(len(response.content))
 		return response
 
-	def commit_data(data):
+	def commit_data(id_num, id_val):
 		"""
 		Commits data from the client into the RHUI usage database
 		"""
-		return data
+		sql = 'INSERT INTO test_data (id, value) VALUES (' + str(id_num) + ', ' + str(id_val) + ');'
+		# DEBUG
+		print "Value for id_num is: ", id_num
+		print "Value for id_val is: ", id_val
+		print "Value for SQL STATEMENT is: ", sql
+		cursor = connection.cursor()
+		cursor.execute(sql)
+		return True
+
+	def db_read():
+		"""
+		Pulls all of the individual records out of the database
+		"""
+		sql = 'SELECT * FROM test_data;'
+		cursor = connection.cursor()
+		cursor.execute(sql)
+		db_out = cursor.fetchall()
+		return db_out
 
 	def print_this():
 		"""
@@ -47,16 +65,6 @@ class rpc_server(object):
 		this = "Printing THIS"
 		print this
 		return this
-
-	def db_read():
-		"""
-		Retrieves usage statistics from the usage_data table
-		"""
-		cursor = connection.cursor()
-		sql = 'SELECT * FROM rhuidev.usage_data;'
-		cursor.execute(sql)
-		result = cursor.fetchall()
-		return result
 
 	dispatcher.register_function(commit_data, 'commit_data')
 	dispatcher.register_function(print_this, 'print_this')
