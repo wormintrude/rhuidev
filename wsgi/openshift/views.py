@@ -2,7 +2,7 @@ import os
 from django.http import HttpResponse
 from django.shortcuts import render_to_response
 from db_test import db_test
-from xmlrpc_server import rpc_server
+from rhui_xmlrpc_server import rhui_rpc_server
 
 # Resolution to XMLRPC 403 issue
 from django.views.decorators.csrf import csrf_exempt
@@ -28,5 +28,5 @@ def rhui_db_write_test(request):
 
 @csrf_exempt
 def xmlrpc_handler(request):
-	server = rpc_server()
+	server = rhui_rpc_server()
 	return HttpResponse(server.rpc_handler(request))

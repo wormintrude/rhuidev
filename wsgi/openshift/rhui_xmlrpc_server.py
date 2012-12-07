@@ -2,7 +2,7 @@ from SimpleXMLRPCServer import SimpleXMLRPCDispatcher
 from django.http import HttpResponse
 from django.db import connection
 
-class rpc_server(object):
+class rhui_rpc_server(object):
 	"""
 	Instantiates an XMLRPC Server for the incoming connection.
 	Provides methods for interacting with the platform.
@@ -13,21 +13,21 @@ class rpc_server(object):
 	def rpc_handler(self, request):
 		if len(request.POST):
 			response = HttpResponse(mimetype="application/xml")
-			response.write(rpc_server.dispatcher._marshaled_dispatch(request.raw_post_data))
-			# DEBUG
-			methods = rpc_server.dispatcher.system_listMethods()
-			print "Incoming XMLRPC connection."
-			print "Available methods: " + str(methods)
+			response.write(rhui_rpc_server.dispatcher._marshaled_dispatch(request.raw_post_data))
+			## DEBUG
+			#methods = rhui_rpc_server.dispatcher.system_listMethods()
+			#print "Incoming XMLRPC connection."
+			#print "Available methods: " + str(methods)
 		else:
 			response = HttpResponse()
 			response.write("<b>This is an XMLRPC Service to Cockfosters.</b><br>")
 			response.write("You need to invoke it using an XMLRPC client.<br>")
 			response.write("The following methods are available:<ul>")
-			methods = rpc_server.dispatcher.system_listMethods()
+			methods = rhui_rpc_server.dispatcher.system_listMethods()
 
 			for method in methods:
-				sig = rpc_server.dispatcher.system_methodSignature(method)
-				help = rpc_server.dispatcher.system_methodHelp(method)
+				sig = rhui_rpc_server.dispatcher.system_methodSignature(method)
+				help = rhui_rpc_server.dispatcher.system_methodHelp(method)
 				response.write("<li><b>%s</b>: [%s] %s" % (method, sig, help))
 
 			response.write("</ul>")
@@ -46,6 +46,8 @@ class rpc_server(object):
 		print "Value for SQL STATEMENT is: ", sql
 		cursor = connection.cursor()
 		cursor.execute(sql)
+		connection.commit()
+		connection.close()
 		return True
 
 	def db_read():
