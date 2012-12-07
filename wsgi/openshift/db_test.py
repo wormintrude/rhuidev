@@ -17,7 +17,7 @@ class db_test(object):
 	def db_read_test(self):
   		try:
 			cursor = connection.cursor()
-			sql = 'SELECT * FROM rhuidev.usage_data;'
+			sql = 'SELECT * FROM rhuidev.rhui_db_usage_data;'
 			cursor.execute(sql)
 			result = cursor.fetchall()
 			## DEBUG

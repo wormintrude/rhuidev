@@ -50,11 +50,9 @@ class rhui_rpc_server(object):
 		"""
 		Pulls all of the individual records out of the database
 		"""
-		sql = 'SELECT * FROM test_data;'
-		cursor = connection.cursor()
-		cursor.execute(sql)
-		db_out = cursor.fetchall()
+		db_out = usage_data.objects.all()
 		return db_out
+		
 
 	def print_this():
 		"""

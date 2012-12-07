@@ -1,21 +1,21 @@
 import xmlrpclib
 import subprocess
 from random import randint
+import sys
 
+# Connection to server
 server = xmlrpclib.ServerProxy("http://localhost:8000/rhui_xmlrpc_server/")
-#server.db_read()
 
-# UUID list generation
-def gen_uuid_list(range):
-	print "Generating UUIDs..."
-	uuid_list = []
-	for i in xrange(range):
-		gen_uuid = subprocess.Popen(['uuidgen'], stdout=subprocess.PIPE)
-		uuid_list.append(gen_uuid.stdout.read().strip())
-	print "Finished generation of UUIDs."
-	return uuid_list
+# Check that sysargv[1] exists and is an integer
+if len(sys.argv) != 2:
+	print "Error:", sys.argv[0], "takes exactly 1 argument (positive integer)."
+	raise SystemExit
 
-uuid_list = gen_uuid_list(10000)
+# UUID generation
+def gen_uuid():
+	print "Generating UUID..."
+	return subprocess.Popen(['uuidgen'], stdout=subprocess.PIPE).stdout.read().strip()
+
 
 # Random hostname generation.
 def gen_hostname():
@@ -29,8 +29,8 @@ def gen_boolean():
 	return boolean
 
 # Insertion of UUIDs into database alongside 'random' values for all other fields.
-for uuid in uuid_list:
-	uuid_val = uuid
+for i in xrange(int(sys.argv[1])):
+	uuid_val = gen_uuid()
 	hostname_val = gen_hostname()
 	cpus_val = randint(0,1)
 	is_virtual_val = gen_boolean()

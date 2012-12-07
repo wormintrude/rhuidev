@@ -1,8 +1,8 @@
 import os
 from django.http import HttpResponse
 from django.shortcuts import render_to_response
-from db_test import db_test
 from rhui_xmlrpc_server import rhui_rpc_server
+from rhui_db.models import usage_data
 
 # Resolution to XMLRPC 403 issue
 from django.views.decorators.csrf import csrf_exempt
@@ -14,18 +14,15 @@ def report(request):
 	html_response = "Reporte de consumo de horas RHUI"
 	return HttpResponse(html_response)
 
-def rhui_db_test(request):
-	test = db_test()
-	return HttpResponse(test.db_connection_test())
-
 def rhui_db_read_test(request):
-	test = db_test()
-	return HttpResponse(test.db_read_test())
-
-def rhui_db_write_test(request):
-	test = db_test()
-	return HttpResponse(test.db_write_test())
-
+	response = HttpResponse()
+	response.write("Usage Data: <br>")
+	report = usage_data.objects.all()
+	for line in report:
+		response.write("%s, %s" % (line.uuid, line.hostname))
+		response.write("<br>")
+	return response
+		
 @csrf_exempt
 def xmlrpc_handler(request):
 	server = rhui_rpc_server()
