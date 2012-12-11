@@ -16,10 +16,12 @@ def report(request):
 
 def rhui_db_read_test(request):
 	response = HttpResponse()
-	response.write("Usage Data: <br>")
+	response.write("<b>RHUI Usage Data</b><br>")
 	report = usage_data.objects.all()
+	response.write("<b>Total number of entries in rhuidev.rhui_db_usage_data: %s</b><br>" % (len(report)))
+	response.write("Usage Data: <br>")
 	for line in report:
-		response.write("%s, %s" % (line.uuid, line.hostname))
+		response.write("%s, %s, %s" % (line.uuid, line.hostname, line.time_stamp))
 		response.write("<br>")
 	return response
 		

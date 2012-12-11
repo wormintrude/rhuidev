@@ -1,0 +1,18 @@
+<html>
+<head>
+<link rel="stylesheet" type="text/css" href="/static/css/rhuibillingreporter.css">
+</head>
+<body>
+<h1>Reporte de utilizacion de instancias conectadas a RHUI</h1>
+<h2>Datos para debug:
+{{ uuid_report }}</h3>
+<table border="0">
+<thead>
+<tr><td>UUID</td><td>Time</td><td>Uptime</td><td>Hostname</td><td>CPUs</td><td>is_virt ?</td><td>Virt?</td><td>Cluster?</td><td>LVS?</td><td>RStorage?</td><td>SFS?</td><td>HPN</td><td>EUS</td><td>VirtGuests</td><td>Unidades Consumidas</td></tr>
+</thead>
+{% for uuid, list in uuid_report.items %}
+<tr><td>{{ uuid }}</td><td>{{ list.1 }}</td><td>{{ list.2 }}</td><td>{{ list.3 }}</td><td>{{ list.4 }}</td><td>{{ list.5 }}</td><td>{{ list.6 }}</td><td>{{ list.7 }}</td><td>{{ list.8 }}</td><td>{{ list.9 }}</td><td>{{ list.10 }}</td><td>{{ list.11 }}</td><td>{{ list.12 }}</td><td>{{ list.13 }}</td><td>{{ list.14 }}</td></tr>
+{% endfor %}
+</table>
+</body>
+</html>

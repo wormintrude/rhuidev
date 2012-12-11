@@ -4,7 +4,8 @@ from random import randint
 import sys
 
 # Connection to server
-server = xmlrpclib.ServerProxy("http://localhost:8000/rhui_xmlrpc_server/")
+server = xmlrpclib.ServerProxy("http://rhuidev-lvecchio.rhcloud.com/rhui_xmlrpc_server/")
+#server = xmlrpclib.ServerProxy("http://localhost:8000/rhui_xmlrpc_server/")
 
 # Check that sysargv[1] exists and is an integer
 if len(sys.argv) != 2:
