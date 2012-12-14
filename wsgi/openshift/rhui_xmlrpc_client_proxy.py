@@ -7,7 +7,8 @@ import sys
 
 class Urllib2Transport(xmlrpclib.Transport):
     def __init__(self, opener=None, https=False, use_datetime=0):
-        xmlrpclib.Transport.__init__(self, use_datetime)
+	if hasattr(xmlrpclib.Transport, '__init__'):
+        	xmlrpclib.Transport.__init__(self, use_datetime)
         self.opener = opener or urllib2.build_opener()
         self.https = https
     
@@ -44,7 +45,8 @@ if len(sys.argv) != 2:
 	print "Error:", sys.argv[0], "takes exactly 1 argument (positive integer)."
 	raise SystemExit
 
-transport = HTTPProxyTransport({'http':'http://127.0.0.1:3128',})
+transport = HTTPProxyTransport({'http':'http://172.16.111.10:3128',})
+#transport = HTTPProxyTransport({'http':'http://127.0.0.1:3128',})
 
 try:
 	server = xmlrpclib.Server('http://rhuidev-lvecchio.rhcloud.com/rhui_xmlrpc_server/', transport = transport)
