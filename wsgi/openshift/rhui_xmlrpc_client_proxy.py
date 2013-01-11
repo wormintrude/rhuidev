@@ -3,6 +3,8 @@ import xmlrpclib
 import subprocess
 from random import randint
 import sys
+import os
+import glob
 
 
 class Urllib2Transport(xmlrpclib.Transport):
@@ -53,20 +55,77 @@ try:
 except:
 	print "Could not set up connection."
 
-for i in xrange(int(sys.argv[1])):
-	server_data = test_data()
-	uuid_val = server_data.gen_uuid()
-	hostname_val = server_data.gen_hostname()
-	cpus_val = randint(0,1)
-        is_virtual_val = server_data.gen_boolean()
-        ent_virtual_val = server_data.gen_boolean()
-        ent_cluster_val = server_data.gen_boolean()
-        ent_lvs_val = server_data.gen_boolean()
-        ent_resilient_val = server_data.gen_boolean()
-        ent_scalable_val = server_data.gen_boolean()
-        ent_hpn_val = server_data.gen_boolean()
-        ent_eus_val = server_data.gen_boolean()
-        virtual_guests_val = randint(1, 30)
+class rhui_data_collector(object):
+	rpm_list = []
+
+	def __init__(self):
+		import rpm
+		t_set = rpm.TransactionSet()
+		db_match = t_set.dbMatch()
+		for rpm in db_match:
+			self.rpm_list.append(rpm['name'])
+	
+	def get_rpm_list(self):
+		for rpm in self.rpm_list:
+			print rpm
+	
+	def find_rpm(self, rpm):
+		if rpm in self.rpm_list:
+			return 1
+		else:
+			return 0
+	
+	def get_uuid(self):
+		dmidecode_uuid = subprocess.Popen(['dmidecode', '-s', 'system-uuid'], stdout = subprocess.PIPE)
+		uuid = dmidecode_uuid.stdout.read().strip()
+		return uuid
+	
+	def get_hostname(self):
+		dmidecode_hostname = subprocess.Popen(['hostname'], stdout = subprocess.PIPE)
+		hostname = dmidecode_hostname.stdout.read().strip()
+		return hostname
+	
+	def get_is_virtual(self):
+		vm_list = ['VMware, Inc.', 'QEMU']
+		dmidecode_is_virtual = subprocess.Popen(['dmidecode', '-s', 'system-manufacturer'], stdout = subprocess.PIPE)
+		is_virtual = dmidecode_is_virtual.stdout.read().strip()
+		if is_virtual in vm_list:
+			return 1
+		else:
+			return 0
+	
+	def get_cpus(self):
+		cpus = os.sysconf("SC_NPROCESSORS_ONLN")
+		return cpus
+	
+	def get_virtual_guest_count(self):
+		vms_list = []
+		vms_path = '/etc/libvirt/qemu/'
+
+		if os.path.exists(vms_path):
+			for file in glob.glob(vms_path + '*.xml'):
+				vms_list.append(file)
+			vm_count = len(vms_list)
+			return vm_count
+		else:
+			vm_count = 0
+			return vm_count
+
+
+def rhui_report():
+	client = rhui_data_collector()
+	uuid_val = client.get_uuid()
+	hostname_val = client.get_hostname() 
+	cpus_val = client.get_cpus()
+        is_virtual_val = client.get_is_virtual()
+        ent_virtual_val = client.find_rpm('libvirt')
+        ent_cluster_val = client.find_rpm('cman')
+        ent_lvs_val = client.find_rpm('piranha')
+        ent_resilient_val = client.find_rpm('lvm2-cluster')
+        ent_scalable_val = client.find_rpm('xfsdump')
+        ent_hpn_val = client.find_rpm('rdma')
+	ent_eus_val = client.find_rpm('rdma')
+        virtual_guests_val = client.get_virtual_guest_count()
 	try:
                 print uuid_val, hostname_val, cpus_val, is_virtual_val, ent_virtual_val, ent_cluster_val, ent_lvs_val, ent_resilient_val, ent_scalable_val, ent_hpn_val, ent_eus_val, virtual_guests_val
                 server.commit_data(uuid_val, hostname_val, cpus_val, is_virtual_val, ent_virtual_val, ent_cluster_val, ent_lvs_val, ent_resilient_val, ent_scalable_val, ent_hpn_val, ent_eus_val, virtual_guests_val)
@@ -74,3 +133,4 @@ for i in xrange(int(sys.argv[1])):
         except:
                 print "Could not insert data"
 
+rhui_report()
