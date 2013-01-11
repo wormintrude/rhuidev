@@ -4,7 +4,7 @@ from datetime import datetime
 class usage_data(models.Model):
 	partner_name = models.CharField(max_length=50)
 	partner_contact = models.CharField(max_length=50)
-	end_user_name = modesl.CharField(max_length=50)
+	end_user_name = models.CharField(max_length=50)
 	end_user_country = models.CharField(max_length=50)
 	end_user_postal_code = models.CharField(max_length=20)
 	end_user_contact = models.CharField(max_length=50)
