@@ -124,11 +124,10 @@ def rhui_report():
         ent_resilient_val = client.find_rpm('lvm2-cluster')
         ent_scalable_val = client.find_rpm('xfsdump')
         ent_hpn_val = client.find_rpm('rdma')
-	ent_eus_val = client.find_rpm('rdma')
         virtual_guests_val = client.get_virtual_guest_count()
 	try:
-                print uuid_val, hostname_val, cpus_val, is_virtual_val, ent_virtual_val, ent_cluster_val, ent_lvs_val, ent_resilient_val, ent_scalable_val, ent_hpn_val, ent_eus_val, virtual_guests_val
-                server.commit_data(uuid_val, hostname_val, cpus_val, is_virtual_val, ent_virtual_val, ent_cluster_val, ent_lvs_val, ent_resilient_val, ent_scalable_val, ent_hpn_val, ent_eus_val, virtual_guests_val)
+                print uuid_val, hostname_val, cpus_val, is_virtual_val, ent_virtual_val, ent_cluster_val, ent_lvs_val, ent_resilient_val, ent_scalable_val, ent_hpn_val, virtual_guests_val
+                server.commit_data(uuid_val, hostname_val, cpus_val, is_virtual_val, ent_virtual_val, ent_cluster_val, ent_lvs_val, ent_resilient_val, ent_scalable_val, ent_hpn_val, virtual_guests_val)
                 print "Insertion succesful"
         except:
                 print "Could not insert data"

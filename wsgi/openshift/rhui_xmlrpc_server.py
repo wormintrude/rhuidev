@@ -35,11 +35,11 @@ class rhui_rpc_server(object):
 		response['Content-length'] = str(len(response.content))
 		return response
 
-	def commit_data(uuid_val, hostname_val, cpus_val, is_virtual_val, ent_virtual_val, ent_cluster_val, ent_lvs_val, ent_resilient_val, ent_scalable_val, ent_hpn_val, ent_eus_val, virtual_guests_val):
+	def commit_data(uuid_val, hostname_val, cpus_val, is_virtual_val, ent_virtual_val, ent_cluster_val, ent_lvs_val, ent_resilient_val, ent_scalable_val, ent_hpn_val, virtual_guests_val):
 		"""
 		Commits data from the client into the RHUI usage database
 		"""
-		entry = usage_data(uuid = str(uuid_val), hostname = str(hostname_val), cpus = int(cpus_val), is_virtual = is_virtual_val, ent_virtual = ent_virtual_val, ent_cluster = ent_cluster_val, ent_lvs = ent_lvs_val, ent_resilient = ent_resilient_val, ent_scalable = ent_scalable_val, ent_hpn = ent_hpn_val, ent_eus = ent_eus_val, virtual_guests = virtual_guests_val)
+		entry = usage_data(uuid = str(uuid_val), hostname = str(hostname_val), cpus = int(cpus_val), is_virtual = is_virtual_val, ent_virtual = ent_virtual_val, ent_cluster = ent_cluster_val, ent_lvs = ent_lvs_val, ent_resilient = ent_resilient_val, ent_scalable = ent_scalable_val, ent_hpn = ent_hpn_val, virtual_guests = virtual_guests_val)
 		try:
 			entry.save()
 			return True

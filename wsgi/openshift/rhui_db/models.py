@@ -13,7 +13,6 @@ class usage_data(models.Model):
 	ent_resilient = models.BooleanField()
 	ent_scalable = models.BooleanField()
 	ent_hpn = models.BooleanField()
-	ent_eus = models.BooleanField()
 	virtual_guests = models.PositiveIntegerField()
 
 	def save(self, *args, **kwargs):
