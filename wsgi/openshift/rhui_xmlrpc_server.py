@@ -53,16 +53,6 @@ class rhui_rpc_server(object):
 		db_out = usage_data.objects.all()
 		return db_out
 		
-
-	def print_this():
-		"""
-		Some other function
-		"""
-		this = "Printing THIS"
-		print this
-		return this
-
 	dispatcher.register_function(commit_data, 'commit_data')
-	dispatcher.register_function(print_this, 'print_this')
 	dispatcher.register_function(db_read, 'db_read')
 
