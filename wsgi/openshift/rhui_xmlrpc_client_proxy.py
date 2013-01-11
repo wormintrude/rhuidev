@@ -135,8 +135,8 @@ def rhui_report():
         ent_hpn_val = client.find_rpm('rdma')
         virtual_guests_val = client.get_virtual_guest_count()
 	try:
-                print uuid_val, hostname_val, cpus_val, is_virtual_val, ent_virtual_val, ent_cluster_val, ent_lvs_val, ent_resilient_val, ent_scalable_val, ent_hpn_val, virtual_guests_val
-                server.commit_data(uuid_val, hostname_val, cpus_val, is_virtual_val, ent_virtual_val, ent_cluster_val, ent_lvs_val, ent_resilient_val, ent_scalable_val, ent_hpn_val, virtual_guests_val)
+                print 'Uploading data to server:', partner_name, partner_contact, end_user_name, end_user_country, end_user_postal_code, end_user_contact, uuid_val, hostname_val, cpus_val, is_virtual_val, ent_virtual_val, ent_cluster_val, ent_lvs_val, ent_resilient_val, ent_scalable_val, ent_hpn_val, virtual_guests_val
+                server.commit_data(partner_name, partner_contact, end_user_name, end_user_country, end_user_postal_code, end_user_contact, uuid_val, hostname_val, cpus_val, is_virtual_val, ent_virtual_val, ent_cluster_val, ent_lvs_val, ent_resilient_val, ent_scalable_val, ent_hpn_val, virtual_guests_val)
                 rhui_logger.info('Succesfully uploaded data to server')
         except:
                 rhui_logger.error('Could not insert data')
