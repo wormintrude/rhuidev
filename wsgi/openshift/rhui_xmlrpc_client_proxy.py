@@ -6,7 +6,15 @@ import sys
 import os
 import glob
 from ConfigParser import SafeConfigParser
+import logging
 
+# First things first, set up logging
+rhui_logger = logging.getLogger('rhui_xmlrpc_client')
+rhui_log_handler = logging.FileHandler('/var/log/rhui_xmlrpc_client.log')
+rhui_log_formatter = logging.Formatter('%(asctime)s %(levelname)s %(message)s')
+rhui_log_handler.setFormatter(rhui_log_formatter)
+rhui_logger.addHandler(rhui_log_handler)
+rhui_logger.setLevel(logging.INFO)
 
 class Urllib2Transport(xmlrpclib.Transport):
     def __init__(self, opener=None, https=False, use_datetime=0):
