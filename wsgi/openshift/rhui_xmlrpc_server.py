@@ -39,7 +39,7 @@ class rhui_rpc_server(object):
 		"""
 		Commits data from the client into the RHUI usage database
 		"""
-		entry = usage_data(partner_name = str(partner_name_val), partner_contact = str(partner_contact_val), end_user_name = str(end_user_name_val), end_user_country = str(end_user_country_val), end_user_postal_code = str(end_user_postal_code_val), end_user_contract = str(end_user_contact_val), uuid = str(uuid_val), hostname = str(hostname_val), cpus = int(cpus_val), is_virtual = is_virtual_val, ent_virtual = ent_virtual_val, ent_cluster = ent_cluster_val, ent_lvs = ent_lvs_val, ent_resilient = ent_resilient_val, ent_scalable = ent_scalable_val, ent_hpn = ent_hpn_val, virtual_guests = virtual_guests_val)
+		entry = usage_data(partner_name = str(partner_name_val), partner_contact = str(partner_contact_val), end_user_name = str(end_user_name_val), end_user_country = str(end_user_country_val), end_user_postal_code = str(end_user_postal_code_val), end_user_contact = str(end_user_contact_val), uuid = str(uuid_val), hostname = str(hostname_val), cpus = int(cpus_val), is_virtual = is_virtual_val, ent_virtual = ent_virtual_val, ent_cluster = ent_cluster_val, ent_lvs = ent_lvs_val, ent_resilient = ent_resilient_val, ent_scalable = ent_scalable_val, ent_hpn = ent_hpn_val, virtual_guests = virtual_guests_val)
 		try:
 			entry.save()
 			return True
