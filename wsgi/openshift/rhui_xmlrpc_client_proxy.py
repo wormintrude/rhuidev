@@ -5,6 +5,7 @@ from random import randint
 import sys
 import os
 import glob
+from ConfigParser import SafeConfigParser
 
 
 class Urllib2Transport(xmlrpclib.Transport):
@@ -85,6 +86,30 @@ class rhui_data_collector(object):
 			return vm_count
 
 
+
+
+# Configuration file parsing
+config_parser = SafeConfigParser()
+config_file = '/etc/rhui/rhui_xmlrpc_client.conf'
+
+# Read config_file
+try:
+	config_parser.read(config_file)
+except:
+	sys.exit("There is no configuration file") # FIXME - This needs to go to log
+
+# Set values from config_file
+rhui_server_url = config_parser.get('server', 'address')
+proxy_address = config_parser.get('proxy', 'address')
+partner_name = config_parser.get('partner', 'name')
+partner_contact = config_parser.get('partner', 'contact')
+end_user_name = config_parser.get('end-user', 'name')
+end_user_country = config_parser.get('end-user', 'country')
+end_user_postal_code = config_parser.get('end-user', 'postal_code')
+end_user_contact = config_parser.get('end-user', 'contact')
+
+
+# Report function is declared _after_ config parsing because we are going to need some details from that
 def rhui_report():
 	client = rhui_data_collector()
 	uuid_val = client.get_uuid()
@@ -101,15 +126,19 @@ def rhui_report():
 	try:
                 print uuid_val, hostname_val, cpus_val, is_virtual_val, ent_virtual_val, ent_cluster_val, ent_lvs_val, ent_resilient_val, ent_scalable_val, ent_hpn_val, virtual_guests_val
                 server.commit_data(uuid_val, hostname_val, cpus_val, is_virtual_val, ent_virtual_val, ent_cluster_val, ent_lvs_val, ent_resilient_val, ent_scalable_val, ent_hpn_val, virtual_guests_val)
-                print "Insertion succesful"
+                print "Insertion succesful" # FIXME - This needs to go to log
         except:
-                print "Could not insert data"
+                print "Could not insert data" # FIXME - This needs to go to log
 
-transport = HTTPProxyTransport({'http':'http://172.16.111.10:3128',})
 
+# Set the transport - also need config parsing for this
+transport = HTTPProxyTransport({'http':proxy_address,}) # FIXME - Possible breakage
+
+# Establish connection to server or die trying
 try:
-	server = xmlrpclib.Server('http://rhuidev-lvecchio.rhcloud.com/rhui_xmlrpc_server/', transport = transport)
+	server = xmlrpclib.Server(rhui_server_url, transport = transport)
 except:
-	print "Could not set up connection."
+	sys.exit("Could not set up connection.") # FIXME - This needs to go to log
 
+# Upload the report to the rhui server on openshift
 rhui_report()
