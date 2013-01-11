@@ -27,33 +27,6 @@ class HTTPProxyTransport(Urllib2Transport):
         opener = urllib2.build_opener(urllib2.ProxyHandler(proxies))
         Urllib2Transport.__init__(self, opener, use_datetime)
 
-class test_data(object):
-	def gen_uuid(self):
-		print "Generating UUID..."
-		uuid = subprocess.Popen(['uuidgen'], stdout=subprocess.PIPE).stdout.read().strip()
-		return uuid
-
-	def gen_hostname(self):
-		envs = ['PROD', 'TEST', 'DEV', 'LAB']
-		role = ['DB', 'APP', 'WEB', 'DMZ', 'FILESRV']
-		hostname = envs[randint(0, len(envs) - 1)] + "-" + role[randint(0, len(role) - 1)] + "-" + str(randint(0, 3)) + str(randint(0, 6)) + str(randint(1, 9))
-		return hostname
-
-	def gen_boolean(self):
-		boolean = randint(0,1)
-		return boolean
-
-if len(sys.argv) != 2:
-	print "Error:", sys.argv[0], "takes exactly 1 argument (positive integer)."
-	raise SystemExit
-
-transport = HTTPProxyTransport({'http':'http://172.16.111.10:3128',})
-#transport = HTTPProxyTransport({'http':'http://127.0.0.1:3128',})
-
-try:
-	server = xmlrpclib.Server('http://rhuidev-lvecchio.rhcloud.com/rhui_xmlrpc_server/', transport = transport)
-except:
-	print "Could not set up connection."
 
 class rhui_data_collector(object):
 	rpm_list = []
@@ -131,5 +104,12 @@ def rhui_report():
                 print "Insertion succesful"
         except:
                 print "Could not insert data"
+
+transport = HTTPProxyTransport({'http':'http://172.16.111.10:3128',})
+
+try:
+	server = xmlrpclib.Server('http://rhuidev-lvecchio.rhcloud.com/rhui_xmlrpc_server/', transport = transport)
+except:
+	print "Could not set up connection."
 
 rhui_report()
