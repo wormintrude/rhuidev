@@ -1,3 +1,5 @@
+#!/usr/bin/python
+
 import urllib2
 import xmlrpclib
 import subprocess
@@ -60,18 +62,18 @@ class rhui_data_collector(object):
 			return 0
 	
 	def get_uuid(self):
-		dmidecode_uuid = subprocess.Popen(['dmidecode', '-s', 'system-uuid'], stdout = subprocess.PIPE)
+		dmidecode_uuid = subprocess.Popen(['/usr/sbin/dmidecode', '-s', 'system-uuid'], stdout = subprocess.PIPE)
 		uuid = dmidecode_uuid.stdout.read().strip()
 		return uuid
 	
 	def get_hostname(self):
-		dmidecode_hostname = subprocess.Popen(['hostname'], stdout = subprocess.PIPE)
+		dmidecode_hostname = subprocess.Popen(['/bin/hostname'], stdout = subprocess.PIPE)
 		hostname = dmidecode_hostname.stdout.read().strip()
 		return hostname
 	
 	def get_is_virtual(self):
 		vm_list = ['VMware, Inc.', 'QEMU']
-		dmidecode_is_virtual = subprocess.Popen(['dmidecode', '-s', 'system-manufacturer'], stdout = subprocess.PIPE)
+		dmidecode_is_virtual = subprocess.Popen(['/usr/sbin/dmidecode', '-s', 'system-manufacturer'], stdout = subprocess.PIPE)
 		is_virtual = dmidecode_is_virtual.stdout.read().strip()
 		if is_virtual in vm_list:
 			return 1
