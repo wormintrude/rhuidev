@@ -16,6 +16,7 @@ rhui_log_handler.setFormatter(rhui_log_formatter)
 rhui_logger.addHandler(rhui_log_handler)
 rhui_logger.setLevel(logging.INFO)
 
+# 
 class Urllib2Transport(xmlrpclib.Transport):
     def __init__(self, opener=None, https=False, use_datetime=0):
 	if hasattr(xmlrpclib.Transport, '__init__'):
@@ -37,6 +38,7 @@ class HTTPProxyTransport(Urllib2Transport):
         Urllib2Transport.__init__(self, opener, use_datetime)
 
 
+# Data Collector
 class rhui_data_collector(object):
 	rpm_list = []
 
@@ -104,7 +106,8 @@ config_file = '/etc/rhui/rhui_xmlrpc_client.conf'
 try:
 	config_parser.read(config_file)
 except:
-	sys.exit("There is no configuration file") # FIXME - This needs to go to log
+	rhui_logger.error('There is no configuration file')
+	sys.exit(0)
 
 # Set values from config_file
 rhui_server_url = config_parser.get('server', 'address')
@@ -134,9 +137,10 @@ def rhui_report():
 	try:
                 print uuid_val, hostname_val, cpus_val, is_virtual_val, ent_virtual_val, ent_cluster_val, ent_lvs_val, ent_resilient_val, ent_scalable_val, ent_hpn_val, virtual_guests_val
                 server.commit_data(uuid_val, hostname_val, cpus_val, is_virtual_val, ent_virtual_val, ent_cluster_val, ent_lvs_val, ent_resilient_val, ent_scalable_val, ent_hpn_val, virtual_guests_val)
-                print "Insertion succesful" # FIXME - This needs to go to log
+                rhui_logger.info('Succesfully uploaded data to server')
         except:
-                print "Could not insert data" # FIXME - This needs to go to log
+                rhui_logger.error('Could not insert data')
+		sys.exit(0) 
 
 
 # Set the transport - also need config parsing for this
@@ -145,8 +149,10 @@ transport = HTTPProxyTransport({'http':proxy_address,}) # FIXME - Possible break
 # Establish connection to server or die trying
 try:
 	server = xmlrpclib.Server(rhui_server_url, transport = transport)
+	rhui_logger.info('Connected to server')
 except:
-	sys.exit("Could not set up connection.") # FIXME - This needs to go to log
+	rhui_logger.error('Could not set up connection to server.')
+	sys.exit(0) 
 
 # Upload the report to the rhui server on openshift
 rhui_report()
