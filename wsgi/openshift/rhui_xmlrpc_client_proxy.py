@@ -142,6 +142,7 @@ def rhui_report():
 
 
 # Set the transport - also need config parsing for this
+# If proxy_address is not defined in config file, assume there is no proxy, log.
 if len(proxy_address) > 0:
 	rhui_logger.info('Proxy server is ' + str(proxy_address))
 	transport = HTTPProxyTransport({'http':proxy_address,})
