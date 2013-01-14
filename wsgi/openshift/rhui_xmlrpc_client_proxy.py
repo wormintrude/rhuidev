@@ -142,7 +142,12 @@ def rhui_report():
 
 
 # Set the transport - also need config parsing for this
-transport = HTTPProxyTransport({'http':proxy_address,}) # FIXME - Possible breakage if there is no proxy defined
+if len(proxy_address) > 0:
+	rhui_logger.info('Proxy server is ' + str(proxy_address))
+	transport = HTTPProxyTransport({'http':proxy_address,})
+else:
+	rhui_logger.info('No proxy defined in rhui_xmlrpc_client.conf')
+	transport = ""
 
 # Establish connection to server or die trying
 try:
