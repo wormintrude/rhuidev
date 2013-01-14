@@ -71,14 +71,10 @@ class rhui_data_collector(object):
 		hostname = dmidecode_hostname.stdout.read().strip()
 		return hostname
 	
-	def get_is_virtual(self):
-		vm_list = ['VMware, Inc.', 'QEMU']
-		dmidecode_is_virtual = subprocess.Popen(['/usr/sbin/dmidecode', '-s', 'system-manufacturer'], stdout = subprocess.PIPE)
-		is_virtual = dmidecode_is_virtual.stdout.read().strip()
-		if is_virtual in vm_list:
-			return 1
-		else:
-			return 0
+	def get_sys_info(self):
+		dmidecode_sys_info = subprocess.Popen(['/usr/sbin/dmidecode', '-s', 'system-manufacturer'], stdout = subprocess.PIPE)
+		sys_info = dmidecode_sys_info.stdout.read().strip()
+		return sys_info
 	
 	def get_cpus(self):
 		cpus = os.sysconf("SC_NPROCESSORS_ONLN")
@@ -128,7 +124,7 @@ def rhui_report():
 	uuid_val = client.get_uuid()
 	hostname_val = client.get_hostname() 
 	cpus_val = client.get_cpus()
-        is_virtual_val = client.get_is_virtual()
+        sys_info_val = client.get_sys_info()
         ent_virtual_val = client.find_rpm('libvirt')
         ent_cluster_val = client.find_rpm('cman')
         ent_lvs_val = client.find_rpm('piranha')
@@ -137,8 +133,8 @@ def rhui_report():
         ent_hpn_val = client.find_rpm('rdma')
         virtual_guests_val = client.get_virtual_guest_count()
 	try:
-                print 'Uploading data to server:', partner_name, partner_contact, end_user_name, end_user_country, end_user_postal_code, end_user_contact, uuid_val, hostname_val, cpus_val, is_virtual_val, ent_virtual_val, ent_cluster_val, ent_lvs_val, ent_resilient_val, ent_scalable_val, ent_hpn_val, virtual_guests_val
-                server.commit_data(partner_name, partner_contact, end_user_name, end_user_country, end_user_postal_code, end_user_contact, uuid_val, hostname_val, cpus_val, is_virtual_val, ent_virtual_val, ent_cluster_val, ent_lvs_val, ent_resilient_val, ent_scalable_val, ent_hpn_val, virtual_guests_val)
+                print 'Uploading data to server:', partner_name, partner_contact, end_user_name, end_user_country, end_user_postal_code, end_user_contact, uuid_val, hostname_val, cpus_val, sys_info_val, ent_virtual_val, ent_cluster_val, ent_lvs_val, ent_resilient_val, ent_scalable_val, ent_hpn_val, virtual_guests_val
+                server.commit_data(partner_name, partner_contact, end_user_name, end_user_country, end_user_postal_code, end_user_contact, uuid_val, hostname_val, cpus_val, sys_info_val, ent_virtual_val, ent_cluster_val, ent_lvs_val, ent_resilient_val, ent_scalable_val, ent_hpn_val, virtual_guests_val)
                 rhui_logger.info('Succesfully uploaded data to server')
         except:
                 rhui_logger.error('Could not insert data')
@@ -146,7 +142,7 @@ def rhui_report():
 
 
 # Set the transport - also need config parsing for this
-transport = HTTPProxyTransport({'http':proxy_address,}) # FIXME - Possible breakage
+transport = HTTPProxyTransport({'http':proxy_address,}) # FIXME - Possible breakage if there is no proxy defined
 
 # Establish connection to server or die trying
 try:

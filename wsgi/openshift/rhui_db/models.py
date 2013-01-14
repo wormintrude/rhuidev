@@ -12,7 +12,7 @@ class usage_data(models.Model):
 	time_stamp = models.DateTimeField(editable=False)
 	hostname = models.CharField(max_length=100)
 	cpus = models.PositiveIntegerField()
-	is_virtual = models.BooleanField()
+	sys_info = models.CharField(max_length=50)
 	ent_virtual = models.BooleanField()
 	ent_cluster = models.BooleanField()
 	ent_lvs = models.BooleanField()

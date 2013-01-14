@@ -21,7 +21,7 @@ def rhui_db_read_test(request):
 	response.write("<b>Total number of entries in rhuidev.rhui_db_usage_data: %s</b><br>" % (len(report)))
 	response.write("Usage Data: <br>")
 	for line in report:
-		response.write("%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s" % (line.partner_name, line.partner_contact, line.end_user_name, line.end_user_country, line.end_user_postal_code, line.end_user_contact, line.uuid, line.hostname, line.time_stamp, line.cpus, line.is_virtual, line.ent_virtual, line.ent_cluster, line.ent_lvs, line.ent_resilient, line.ent_scalable, line.ent_hpn, line.virtual_guests))
+		response.write("%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s" % (line.partner_name, line.partner_contact, line.end_user_name, line.end_user_country, line.end_user_postal_code, line.end_user_contact, line.uuid, line.hostname, line.time_stamp, line.cpus, line.sys_info, line.ent_virtual, line.ent_cluster, line.ent_lvs, line.ent_resilient, line.ent_scalable, line.ent_hpn, line.virtual_guests))
 		response.write("<br>")
 	return response
 		
