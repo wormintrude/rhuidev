@@ -9,6 +9,7 @@ import os
 import glob
 from ConfigParser import SafeConfigParser
 import logging
+import traceback
 
 # First things first, set up logging
 rhui_logger = logging.getLogger('rhui_xmlrpc_client')
@@ -103,7 +104,7 @@ config_file = '/etc/rhui/rhui_xmlrpc_client.conf'
 # Read config_file
 try:
 	config_parser.read(config_file)
-except:
+except Exception, err:
 	rhui_logger.error('There is no configuration file')
 	sys.exit(0)
 
@@ -136,7 +137,7 @@ def rhui_report():
                 print 'Uploading data to server:', partner_name, partner_contact, end_user_name, end_user_country, end_user_postal_code, end_user_contact, uuid_val, hostname_val, cpus_val, sys_info_val, ent_virtual_val, ent_cluster_val, ent_lvs_val, ent_resilient_val, ent_scalable_val, ent_hpn_val, virtual_guests_val
                 server.commit_data(partner_name, partner_contact, end_user_name, end_user_country, end_user_postal_code, end_user_contact, uuid_val, hostname_val, cpus_val, sys_info_val, ent_virtual_val, ent_cluster_val, ent_lvs_val, ent_resilient_val, ent_scalable_val, ent_hpn_val, virtual_guests_val)
                 rhui_logger.info('Succesfully uploaded data to server')
-        except:
+        except Exception, err:
                 rhui_logger.error('Could not insert data')
 		sys.exit(0) 
 
@@ -147,15 +148,22 @@ if len(proxy_address) > 0:
 	rhui_logger.info('Proxy server is ' + str(proxy_address))
 	transport = HTTPProxyTransport({'http':proxy_address,})
 else:
-	rhui_logger.info('No proxy defined in rhui_xmlrpc_client.conf')
-	transport = ""
+	rhui_logger.info('No proxy defined in rhui_xmlrpc_client.conf, continuing without a proxy server')
+	transport = '' # This will render 'transport' a string, with no attributes. xmlrpclib.Server will look for the attribute 'request' and fail!
 
 # Establish connection to server or die trying
 try:
-	server = xmlrpclib.Server(rhui_server_url, transport = transport)
-	rhui_logger.info('Connected to server')
-except:
-	rhui_logger.error('Could not set up connection to server.')
+	if isinstance(transport, HTTPProxyTransport):
+		print 'Trying to connect via proxy...'
+		server = xmlrpclib.Server(rhui_server_url, transport = transport)
+		rhui_logger.info('Connecting to server via proxy server:' + str(proxy_address))
+	else:
+		print 'Trying a direct connection...'
+		server = xmlrpclib.Server(rhui_server_url)
+		rhui_logger.info('Connecting to server via direct connection')
+except Exception, err:
+	print traceback.format_exc()
+	rhui_logger.error('Could not initialize a connection to the server:' + str(rhui_server_url))
 	sys.exit(0) 
 
 # Upload the report to the rhui server on openshift
