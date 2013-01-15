@@ -10,9 +10,26 @@ dmidecode
 python >= 2.6.5  
 dmidecode  
 
+### Proxy Server  
+Unless you are planning on giving every one of your servers free range access to the interwebz, then you will need to have a proxy server through which the client can connect to the server.  
+Any combination of type / ip address / port _should_ work (but might not!). This client has been tested exclusively against `squid`, making it the preferred choice.  
+
+### IPTables  
+If you are installing `squid` on the RHUA server, then chances are that you have completely forgotten that it has `iptables` enabled (don't worry, long hours of debugging were put in before we remembered it!).  
+In order to allow connections to the proxy server, simply add the rule in `/etc/sysconfig/iptables`:  
+    # /etc/sysconfig/iptables
+    ...
+    -A INPUT -p tcp --dport 3128 -j ACCEPT
+    ...
+
+Or, issue it via command line, save and restart:  
+
+    # iptables -I INPUT -p tcp --dport 3128 -j ACCEPT
+    # service iptables save
+    # service iptables restart
+
 ## Installation  
-The script can be installed to anywhere in the system that `root` has access to (so, anywhere).  
-Recommended destination is `/sbin`, mererly due to the fact that end-users will feel less inclined to erase it.  
+Recommended destination is `/etc/cron.hourly`, so that the script runs on the hour, every hour.  
 
 ## Configuration  
 The script now supports a configuration file at `/etc/rhui/rhui_xmlrpc_client.conf`.  
@@ -37,11 +54,6 @@ Please note that any parameters added to this file will be intentionally ignored
 
 ## Running  
 The script can be run from anywhere by invoking it via `/usr/bin/python /path/to/rhui_xmlrpc_client_proxy.py`.  
-Ideally, you would run it either via cron, from roots crontab:  
-
-    * */1 * * * /usr/bin/python /sbin/rhui_xmlpc_client_proxy.py
-
-Or, via `/etc/cron.hourly`.  
 
 ## Troubleshooting  
 Whatever-the-name-of-this-is now comes with a log!  
