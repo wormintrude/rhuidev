@@ -149,15 +149,16 @@ if len(proxy_address) > 0:
 	transport = HTTPProxyTransport({'http':proxy_address,})
 else:
 	rhui_logger.info('No proxy defined in rhui_xmlrpc_client.conf, continuing without a proxy server')
-	transport = '' # This will render 'transport' a string, with no attributes. xmlrpclib.Server will look for the attribute 'request' and fail!
+	# Do not initialize 'transport'
 
 # Establish connection to server or die trying
 try:
-	if isinstance(transport, HTTPProxyTransport):
+	try:
+		isinstance(transport, HTTPProxyTransport)
 		print 'Trying to connect via proxy...'
 		server = xmlrpclib.Server(rhui_server_url, transport = transport)
 		rhui_logger.info('Connecting to server via proxy server:' + str(proxy_address))
-	else:
+	except Exception, err:
 		print 'Trying a direct connection...'
 		server = xmlrpclib.Server(rhui_server_url)
 		rhui_logger.info('Connecting to server via direct connection')
